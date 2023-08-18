@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 require __DIR__ . '/api/users.php';
+require __DIR__ . '/api/posts.php';
+require __DIR__ . '/api/comments.php';
 
 
 // Route::apiResource('users', UserController::class);
