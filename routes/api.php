@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 require __DIR__ . '/api/users.php';
 
+
 // Route::apiResource('users', UserController::class);
 
 
