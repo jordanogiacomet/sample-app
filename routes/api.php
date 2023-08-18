@@ -3,6 +3,7 @@
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use App\Helpers\Routes\RouteHelper;
 use Illuminate\Support\Facades\Route;
 
 
@@ -17,9 +18,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-require __DIR__ . '/api/users.php';
-require __DIR__ . '/api/posts.php';
-require __DIR__ . '/api/comments.php';
+
+
+Route::group([], function(){
+    RouteHelper::includeRouteFiles(__DIR__ . '/api');
+});
+
+
+// require __DIR__ . '/api/users.php';
+// require __DIR__ . '/api/posts.php';
+// require __DIR__ . '/api/comments.php';
 
 
 // Route::apiResource('users', UserController::class);
