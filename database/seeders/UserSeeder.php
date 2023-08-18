@@ -6,22 +6,24 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Database\Seeders\Traits\TruncateTable;
+use Database\Seeders\Traits\DisableForeignKeys;
 use Illuminate\Support\Facades\DB; // Adicione esta linha para importar a classe DB
 
 class UserSeeder extends Seeder
 {
 
-    use TruncateTable;
+    use TruncateTable, DisableForeignKeys;
 
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        $this->disableForeignKeys();
         $this->truncate('users'); 
         User::factory(10)->create();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        $this->enableForeignKeys();
+       
 
        
     }
