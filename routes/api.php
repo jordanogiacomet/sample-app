@@ -4,7 +4,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -17,14 +17,9 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::get('/users', [UserController::class, 'index']);
+require __DIR__ . '/api/users.php';
 
-Route::get('/users/{user}', [UserController::class, 'show']);
+// Route::apiResource('users', UserController::class);
 
-Route::post('/users', [UserController::class, 'store']);
-
-Route::patch('/users/{user}', [UserController::class, 'update']);
-
-Route::delete('/users/{user}', [UserController::class, 'destroy']);
 
 
