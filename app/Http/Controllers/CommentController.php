@@ -14,8 +14,10 @@ class CommentController extends Controller
      */
     public function index()
     {
+        $comments = Comment::query()->get();
+
         return new JsonResponse([
-            'data' => 'data'
+            'data' => $comments
         ]);
     }
 

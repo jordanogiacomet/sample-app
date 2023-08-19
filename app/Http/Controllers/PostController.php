@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
@@ -14,8 +15,10 @@ class PostController extends Controller
      */
     public function index()
     {
+        $posts = Post::query()->get();
+
         return new JsonResponse([
-            'data' => 'data'
+            'data' => $posts
         ]);
     }
 
@@ -24,8 +27,15 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+
+        $created = Post::query()->create([
+            'title' => $request->title,
+            'body' => $request->body
+        ]);
+
+
         return new JsonResponse([
-            'data' => 'posted'
+            'data' => $created
          ]);
     }
 
@@ -44,9 +54,23 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
+
+        $updated = $post->update([
+            'title' => $request->title ?? $post->title,
+            'body' => $request->body ?? $post->body
+        ]);
+
+        if(!$updated){
+            return new JsonResponse([
+                'error' => [
+                    'Failed to update model.'
+                ]
+            ], 400);
+        }
+
         return new JsonResponse([
-            'data' => 'patched'
-         ]);
+            'data' => $post
+         ], 200);
     }
 
     /**
@@ -54,8 +78,16 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        $deleted = $post->forceDelete();
+
+
+        if(!$deleted){
+            return new JsonResponse([
+                'error' => 'Could not delete resource.'
+            ], 400);
+        }
         return new JsonResponse([
-            'data' => 'deleted'
-         ]);
+            'data' => 'success'
+        ], 200);
     }
 }
