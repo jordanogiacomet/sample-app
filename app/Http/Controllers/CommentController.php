@@ -26,9 +26,24 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        return new JsonResponse([
-            'data' => 'posted'
-         ]);
+        $validatedData = $request->validate([
+            'body' => 'required|string',
+            'post_id' => 'required|exists:posts,id'
+        ]);
+
+
+        $userId = auth()->id();
+
+        $comment = Comment::create([
+            'body' => $validatedData['body'],
+            'user_id' => $userId,
+            'post_id' => $validatedData['post_id']
+        ]);
+
+
+        return JsonResponse([
+            'data' => $comment
+        ]);
     }
 
     /**
