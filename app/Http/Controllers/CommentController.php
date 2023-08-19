@@ -6,6 +6,7 @@ use App\Models\Comment;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
+use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
@@ -41,7 +42,7 @@ class CommentController extends Controller
         ]);
 
 
-        return JsonResponse([
+        return new JsonResponse([
             'data' => $comment
         ]);
     }
@@ -61,9 +62,23 @@ class CommentController extends Controller
      */
     public function update(Request $request, Comment $comment)
     {
+        $updated = $comment->update([
+            'body' => $request->body ?? $comment->title,
+            'user_id' => $request->user_id ?? $comment->user_id,
+            'post_id' => $request->post_id ?? $comment->post_id
+        ]);
+
+        if(!$updated){
+            return new JsonResponse([
+                'error' => [
+                    'Failed to update model.'
+                ]
+            ], 400);
+        }
+
         return new JsonResponse([
-            'data' => 'patched'
-         ]);
+            'data' => $comment
+         ], 200);
     }
 
     /**
@@ -71,8 +86,17 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
+        $deleted = $comment->forceDelete();
+
+
+        if(!$deleted){
+            return new JsonResponse([
+                'error' => 'Could not delete resource.'
+            ], 400);
+        }
+
         return new JsonResponse([
-            'data' => 'deleted'
-         ]);
+            'data' => 'success'
+         ], 200);
     }
 }
