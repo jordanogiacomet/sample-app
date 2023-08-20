@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\StoreUserRequest;
@@ -20,9 +21,7 @@ class UserController extends Controller
     {
         $users = User::query()->get();
 
-        return new JsonResponse([
-            'data' => $users
-        ]);
+        return UserResource::collection($users);
     }
 
     /**
@@ -47,7 +46,7 @@ class UserController extends Controller
 
         $token = $user->createToken('appToken')->plainTextToken;
 
-        return response()->json(['user' => $user, 'token' => $token], 201);
+        return new UserResource($user);
     }
 
 
@@ -72,7 +71,7 @@ class UserController extends Controller
         // Gere um novo token para o usuário
         $token = $user->createToken('appToken')->plainTextToken;
 
-        return response()->json(['token' => $token], 200);
+        return new UserResource($user);
     }
 
     public function logout(Request $request) {
@@ -91,9 +90,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return new JsonResponse([
-            'data' => $user
-        ]);
+        return new UserResource($user);
     }
 
     /**
@@ -115,9 +112,7 @@ class UserController extends Controller
         }
 
 
-        return new JsonResponse([
-            'data' => $user
-        ], 200);
+        return new UserResource($user);
     }
 
     /**
