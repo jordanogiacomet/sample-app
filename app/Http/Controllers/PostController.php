@@ -65,16 +65,11 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function destroy(Post $post, PostRepository $repository)
     {
-        $deleted = $post->forceDelete();
 
+        $deleted = $repository->forceDelete($post);
 
-        if(!$deleted){
-            return new JsonResponse([
-                'error' => 'Could not delete resource.'
-            ], 400);
-        }
         return new JsonResponse([
             'data' => 'success'
         ], 200);
