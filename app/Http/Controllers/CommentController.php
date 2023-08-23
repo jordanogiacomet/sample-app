@@ -6,6 +6,7 @@ use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Resources\CommentResource;
+use App\Repositories\CommentRepository;
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
 
@@ -26,7 +27,7 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, CommentRepository $repository)
     {
         $validatedData = $request->validate([
             'body' => 'required|string',
@@ -34,13 +35,9 @@ class CommentController extends Controller
         ]);
 
 
-        $userId = auth()->id();
+        $validatedData['user_id'] = auth()->id();
 
-        $comment = Comment::create([
-            'body' => $validatedData['body'],
-            'user_id' => $userId,
-            'post_id' => $validatedData['post_id']
-        ]);
+        $comment = $repository->create($validatedData);
 
 
         return new CommentResource($comment);
