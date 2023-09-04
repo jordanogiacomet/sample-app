@@ -54,38 +54,23 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Comment $comment)
+    public function update(Request $request, Comment $comment, CommentRepository $repository)
     {
-        $updated = $comment->update([
-            'body' => $request->body ?? $comment->title,
-            'user_id' => $request->user_id ?? $comment->user_id,
-            'post_id' => $request->post_id ?? $comment->post_id
-        ]);
-
-        if(!$updated){
-            return new JsonResponse([
-                'error' => [
-                    'Failed to update model.'
-                ]
-            ], 400);
-        }
-
+        $comment = $repository->update($comment, $request->only([
+            'body',
+            'user_id',
+            'post_id'
+        ]));
         return new CommentResource($comment);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $comment)
+    public function destroy(Comment $comment, CommentRepository $repository)
     {
-        $deleted = $comment->forceDelete();
 
-
-        if(!$deleted){
-            return new JsonResponse([
-                'error' => 'Could not delete resource.'
-            ], 400);
-        }
+        $deleted = $repository->forceDelete($comment);
 
         return new JsonResponse([
             'data' => 'success'
